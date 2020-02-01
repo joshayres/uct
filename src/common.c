@@ -28,6 +28,11 @@ const char *read_file(const char *filename)
 
         buffer[length] = '\0';
     }
+    else
+    {
+        printf("error: File not found: %s", filename);
+        return false;
+    }
     return buffer;
 }
 
@@ -39,7 +44,8 @@ int str_len(const char *s)
 }
 // Stretchy buffers, invented (?) by Sean Barrett
 
-typedef struct BufHdr {
+typedef struct BufHdr
+{
     size_t len;
     size_t cap;
     char buf[];
@@ -58,7 +64,8 @@ typedef struct BufHdr {
 #define buf_printf(b, ...) ((b) = buf__printf((b), __VA_ARGS__))
 #define buf_clear(b) ((b) ? buf__hdr(b)->len = 0 : 0)
 
-void *buf__grow(const void *buf, size_t new_len, size_t elem_size) {
+void *buf__grow(const void *buf, size_t new_len, size_t elem_size)
+{
     assert(buf_cap(buf) <= (SIZE_MAX - 1)/2);
     size_t new_cap = CLAMP_MIN(2*buf_cap(buf), MAX(new_len, 16));
     assert(new_len <= new_cap);
@@ -75,7 +82,8 @@ void *buf__grow(const void *buf, size_t new_len, size_t elem_size) {
     return new_hdr->buf;
 }
 
-char *buf__printf(char *buf, const char *fmt, ...) {
+char *buf__printf(char *buf, const char *fmt, ...)
+{
     va_list args;
     va_start(args, fmt);
     size_t cap = buf_cap(buf) - buf_len(buf);
