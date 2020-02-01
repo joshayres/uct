@@ -1,4 +1,4 @@
-# UJY
+# UJI
 
 ## Goals
 + Learn about compliers
