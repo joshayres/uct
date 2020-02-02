@@ -1,4 +1,4 @@
-# UJI
+# UCT
 
 ## Goals
 + Learn about compliers
