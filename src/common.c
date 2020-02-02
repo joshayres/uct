@@ -6,11 +6,11 @@
 
 #define typeof __typeof__
 
-const char *read_file(const char *filename)
+const char* read_file(const char* filename)
 {
-    char *buffer = 0;
+    char* buffer = 0;
     long length;
-    FILE *f= fopen(filename, "r");
+    FILE* f= fopen(filename, "r");
 
     size_t read_length;
 
@@ -19,7 +19,7 @@ const char *read_file(const char *filename)
         fseek(f, 0, SEEK_END);
         length = ftell(f);
         fseek(f, 0, SEEK_SET);
-        buffer = (char *)malloc(length + 1);
+        buffer = (char*)malloc(length + 1);
         if(buffer)
         {
             read_length = fread(buffer, 1, length, f);
@@ -36,7 +36,7 @@ const char *read_file(const char *filename)
     return buffer;
 }
 
-int str_len(const char *s)
+int str_len(const char* s)
 {
     int i;
     for(i = 0; s[i] != '\0'; ++i);
@@ -64,7 +64,7 @@ typedef struct BufHdr
 #define buf_printf(b, ...) ((b) = buf__printf((b), __VA_ARGS__))
 #define buf_clear(b) ((b) ? buf__hdr(b)->len = 0 : 0)
 
-void *buf__grow(const void *buf, size_t new_len, size_t elem_size)
+void* buf__grow(const void* buf, size_t new_len, size_t elem_size)
 {
     assert(buf_cap(buf) <= (SIZE_MAX - 1)/2);
     size_t new_cap = CLAMP_MIN(2*buf_cap(buf), MAX(new_len, 16));
@@ -82,7 +82,7 @@ void *buf__grow(const void *buf, size_t new_len, size_t elem_size)
     return new_hdr->buf;
 }
 
-char *buf__printf(char *buf, const char *fmt, ...)
+char* buf__printf(char* buf, const char* fmt, ...)
 {
     va_list args;
     va_start(args, fmt);
