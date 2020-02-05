@@ -1,5 +1,7 @@
 typedef enum
 {
+    TOKEN_EOF,
+
     TOKEN_COLON,
     TOKEN_LPAREN,
     TOKEN_RPAREN,
@@ -21,6 +23,8 @@ typedef enum
     TOKEN_NAME,
     TOKEN_NEG,
     TOKEN_NOT,
+    TOKEN_OR,
+    TOKEN_HAT,
 
     TOKEN_FIRST_MUL,
     TOKEN_MUL = TOKEN_FIRST_MUL,
@@ -34,9 +38,7 @@ typedef enum
     TOKEN_FIRST_ADD,
     TOKEN_ADD = TOKEN_FIRST_ADD,
     TOKEN_SUB,
-    TOKEN_XOR,
-    TOKEN_OR,
-    TOKEN_LAST_ADD = TOKEN_OR,
+    TOKEN_LAST_ADD = TOKEN_SUB,
 
     TOKEN_FIRST_CMP,
     TOKEN_EQ = TOKEN_FIRST_CMP,
@@ -56,9 +58,6 @@ typedef enum
     TOKEN_MUL_ASSIGN,
     TOKEN_DIV_ASSIGN,
     TOKEN_MOD_ASSIGN,
-    TOKEN_OR_ASSIGN,
-    TOKEN_AND_ASSIGN,
-    TOKEN_XOR_ASSIGN,
     TOKEN_LSHIFT_ASSIGN,
     TOKEN_RSHIFT_ASSIGN,
     TOKEN_LAST_ASSIGN = TOKEN_RSHIFT_ASSIGN,
@@ -67,7 +66,6 @@ typedef enum
     TOKEN_DEC,
     TOKEN_COLON_ASSIGN,
 
-    TOKEN_EOF,
     NUM_TOKEN_KINDS,
 } token_type;
 
@@ -80,7 +78,7 @@ typedef enum
     MOD_CHAR,
 } token_mod;
 
-const char *token_type_names[] = 
+const char *token_type_names[] =
 {
     [TOKEN_EOF] = "EOF",
     [TOKEN_COLON] = ":",
@@ -101,6 +99,7 @@ const char *token_type_names[] =
     [TOKEN_STR] = "string",
     [TOKEN_NAME] = "name",
     [TOKEN_NEG] = "~",
+    [TOKEN_HAT] = "^",
     [TOKEN_NOT] = "!",
     [TOKEN_MUL] = "*",
     [TOKEN_DIV] = "/",
@@ -111,7 +110,6 @@ const char *token_type_names[] =
     [TOKEN_ADD] = "+",
     [TOKEN_SUB] = "-",
     [TOKEN_OR] = "|",
-    [TOKEN_XOR] = "^",
     [TOKEN_EQ] = "==",
     [TOKEN_NOTEQ] = "!=",
     [TOKEN_LT] = "<",
@@ -123,9 +121,6 @@ const char *token_type_names[] =
     [TOKEN_ASSIGN] = "=",
     [TOKEN_ADD_ASSIGN] = "+=",
     [TOKEN_SUB_ASSIGN] = "-=",
-    [TOKEN_OR_ASSIGN] = "|=",
-    [TOKEN_AND_ASSIGN] = "&=",
-    [TOKEN_XOR_ASSIGN] = "^=",
     [TOKEN_MUL_ASSIGN] = "*=",
     [TOKEN_DIV_ASSIGN] = "/=",
     [TOKEN_MOD_ASSIGN] = "%=",
@@ -147,6 +142,17 @@ const char *token_type_name(token_type type)
         return "<unknown>";
     }
 }
+
+token_type assign_token_to_binary_token[NUM_TOKEN_KINDS] =
+{
+    [TOKEN_ADD_ASSIGN] = TOKEN_ADD,
+    [TOKEN_SUB_ASSIGN] = TOKEN_SUB,
+    [TOKEN_LSHIFT_ASSIGN] = TOKEN_LSHIFT,
+    [TOKEN_RSHIFT_ASSIGN] = TOKEN_RSHIFT,
+    [TOKEN_MUL_ASSIGN] = TOKEN_MUL,
+    [TOKEN_DIV_ASSIGN] = TOKEN_DIV,
+    [TOKEN_MOD_ASSIGN] = TOKEN_MOD,
+};
 
 typedef struct
 {
