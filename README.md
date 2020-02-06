@@ -1,5 +1,20 @@
 # UCT
 
+## Getting Started
+Copy the git repo
+```sh
+git clone https://github.com/joshayres/uct.git
+```
+
+To build uct on a unix system:
+```sh
+cd src
+./build.sh
+```
+
+To build on windows:
+Not yet done
+
 ## Goals
 + Learn about compliers
 + Create a slightly better C (kinda)
