@@ -201,7 +201,7 @@ void scan_char()
 
 void scan_string()
 {
-    assert(*lex.current == "'");
+    assert(*lex.current == '"');
     lex.current++;
     char *str = NULL;
     while(*lex.current != '"' && !is_at_end())
@@ -210,7 +210,16 @@ void scan_string()
         {
             lex.line++;
         }
-        buf_push(str, *lex.current); lex.current++;
+        buf_push(str, *lex.current);
+        lex.current++;
+    }
+    if(*lex.current)
+    {
+        lex.current++;
+    }
+    else
+    {
+        //TODO: ERROR
     }
     buf_push(str, 0);
     tok.type = TOKEN_STR;

@@ -16,6 +16,7 @@
 #define assert_token_int(x) assert(tok.int_val == (x) && match_token(TOKEN_INT))
 #define assert_token_float(x) assert(tok.float_val == (x) && match_token(TOKEN_FLOAT))
 #define assert_token_eof() assert(is_token(0))
+#define assert_token_str(x) assert(strcmp(tok.str_val, (x)) == 0 && match_token(TOKEN_STR))
 
 int main(int argc, char **argv)
 {
@@ -45,7 +46,10 @@ int main(int argc, char **argv)
     assert_token_int('\n');
     assert_token_eof();
 
-
+    //STRING TEST
+    init_lex(" \"Hi\"");
+    assert_token_str("Hi");
+    assert_token_eof();
 
     return 0;
 }
