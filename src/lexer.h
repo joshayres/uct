@@ -66,6 +66,8 @@ typedef enum
     TOKEN_DEC,
     TOKEN_COLON_ASSIGN,
 
+    TOKEN_ARROW,
+
     NUM_TOKEN_KINDS,
 } token_type;
 
@@ -129,6 +131,7 @@ const char *token_type_names[] =
     [TOKEN_INC] = "++",
     [TOKEN_DEC] = "--",
     [TOKEN_COLON_ASSIGN] = ":=",
+    [TOKEN_ARROW] = "=>",
 };
 
 const char *token_type_name(token_type type)
@@ -142,6 +145,27 @@ const char *token_type_name(token_type type)
         return "<unknown>";
     }
 }
+
+const char* struct_keyword;
+const char* enum_keyword;
+const char* union_keyword;
+const char* let_keyword;
+const char* fn_keyword;
+const char* const_keyword;
+const char* if_keyword;
+const char* else_keyword;
+const char* for_keyword;
+const char* while_keyword;
+const char* switch_keyword;
+const char* break_keyword;
+const char* err_keyword;
+const char* import_keyword;
+const char* extern_keyword;
+const char* return_keyword;
+
+const char* first_keyword;
+const char* last_keyword;
+const char** keywords;
 
 token_type assign_token_to_binary_token[NUM_TOKEN_KINDS] =
 {

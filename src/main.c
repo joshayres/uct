@@ -20,6 +20,7 @@
 
 int main(int argc, char **argv)
 {
+    init_keywords();
     //INT test
     char* source = "0 2158 0xffffff 0o12 0b1010";
     init_lex(source);
@@ -50,6 +51,11 @@ int main(int argc, char **argv)
     init_lex(" \"Hi\"");
     assert_token_str("Hi");
     assert_token_eof();
+
+    //Keyword test
+    init_lex("struct");
+    assert(tok.type == TOKEN_KEYWORD);
+    assert(tok.name == struct_keyword);
 
     return 0;
 }

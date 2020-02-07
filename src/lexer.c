@@ -227,6 +227,45 @@ void scan_string()
     tok.line = lex.line;
 }
 
+#define KEYWORD(name) name##_keyword = str_intern(#name); buf_push(keywords, name##_keyword)
+
+void init_keywords()
+{
+    static bool inited;
+    if(inited)
+    {
+        return;
+    }
+    KEYWORD(struct);
+    KEYWORD(enum);
+    KEYWORD(union);
+    KEYWORD(let);
+    KEYWORD(fn);
+    KEYWORD(const);
+    KEYWORD(if);
+    KEYWORD(else);
+    KEYWORD(for);
+    KEYWORD(while);
+    KEYWORD(switch);
+    KEYWORD(break);
+    KEYWORD(err);
+    KEYWORD(import);
+    KEYWORD(extern);
+    KEYWORD(return);
+
+    first_keyword = struct_keyword;
+    last_keyword = return_keyword;
+
+    inited = true;
+}
+
+#undef KEYWORD
+
+bool is_keyword_name(const char* name)
+{
+    return first_keyword <= name && name <= last_keyword;
+}
+
 #define CASE1(c1, k1) \
     case c1: \
         tok.type = k1; \
@@ -318,10 +357,9 @@ void next_token()
         while(isalnum(*lex.current) || *lex.current == '_')
         {
             lex.current++;
-            //TODO: keyword handling
         }
         tok.name = str_intern_range(tok.start, lex.current);
-        tok.type = TOKEN_NAME;
+        tok.type = is_keyword_name(tok.name) ? TOKEN_KEYWORD : TOKEN_NAME;
         break;
     case '<':
         tok.type = TOKEN_LT;
@@ -395,13 +433,13 @@ void next_token()
         CASE1('~',  TOKEN_NEG);
         CASE2('!',  TOKEN_NOT,      '=',    TOKEN_NOTEQ);
         CASE2(':',  TOKEN_COLON,    '=',    TOKEN_COLON_ASSIGN);
-        CASE2('=',  TOKEN_ASSIGN,   '=',    TOKEN_EQ);
         CASE2('*',  TOKEN_MUL,      '=',    TOKEN_MUL_ASSIGN);
         CASE2('%',  TOKEN_MOD,      '=',    TOKEN_MOD_ASSIGN);
         CASE2('&',  TOKEN_AND,      '&',    TOKEN_AND_AND);
         CASE2('|',  TOKEN_OR,       '|',    TOKEN_OR_OR);
         CASE3('+',  TOKEN_ADD,      '=',    TOKEN_ADD_ASSIGN, '+', TOKEN_INC);
         CASE3('-',  TOKEN_SUB,      '=',    TOKEN_SUB_ASSIGN, '-', TOKEN_DEC);
+        CASE3('=',  TOKEN_ASSIGN,   '=',    TOKEN_EQ,         '>', TOKEN_ARROW);
 
     default:
         //TODO: ERROR
