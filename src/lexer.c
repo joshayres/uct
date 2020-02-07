@@ -48,6 +48,28 @@ static bool is_at_end()
     return *lex.current == '\0';
 }
 
+void warning(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    printf("%s(%d): warning: ", tok.name, lex.line);
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
+}
+
+void error(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    printf("%s(%d): error: ", tok.name, lex.line);
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
+}
+
+#define fatal_error(...) (error(__VA_ARGS__), exit(1))
+
 void scan_int()
 {
     tok.start = lex.current;
@@ -93,12 +115,12 @@ void scan_int()
         }
         if(digit >= base)
         {
-            //TODO: ERROR Handling plz
+            error("Digit '%c' too high for base %d", *lex.current, base);
             digit = 0;
         }
         if(val > (ULLONG_MAX - digit)/base)
         {
-            //TODO: ERROR
+            error("overflow");
             while(isdigit(*lex.current))
             {
                 lex.current++;
@@ -111,7 +133,7 @@ void scan_int()
     }
     if(lex.current == start_digits)
     {
-        //TODO: ERROR
+        error("Expected base %d digit, got '%c'", base, *lex.current);
     }
     tok.type = TOKEN_INT;
     tok.int_val = val;
@@ -133,10 +155,10 @@ void scan_float()
     {
         lex.current++;
     }
-    double val = strtod(start, NULL);
+    f64 val = strtod(start, NULL);
     if(val == HUGE_VAL)
     {
-        //TODO: ERROR
+        error("Float literal overflow");
     }
     tok.type = TOKEN_FLOAT;
     tok.float_val = val;
@@ -164,12 +186,12 @@ void scan_char()
     int val = 0;
     if(*lex.current == '\'')
     {
-        //TODO: ERROR
+        error("Char literal cannot be empty");
         lex.current++;
     }
     else if(*lex.current == '\n')
     {
-        //TODO: ERROR
+        error("Char literal cannot be a new line");
     }
     else if(*lex.current == '\\')
     {
@@ -177,7 +199,7 @@ void scan_char()
         val = escape_to_char[(unsigned char)*lex.current];
         if(val == 0 && lex.current != '0')
         {
-            //TODO: ERROR
+            error("Invalid char literal escape '\\%c'", *lex.current);
         }
         lex.current++;
     }
@@ -188,7 +210,7 @@ void scan_char()
     }
     if(*lex.current != '\'')
     {
-        //TODO:ERROR
+        error("Expected closing char quote, got '%c'", *lex.current);
     }
     else
     {
@@ -199,6 +221,7 @@ void scan_char()
     tok.mod = MOD_CHAR;
 }
 
+//TODO: handle escape characters
 void scan_string()
 {
     assert(*lex.current == '"');
@@ -219,7 +242,7 @@ void scan_string()
     }
     else
     {
-        //TODO: ERROR
+        fatal_error("Unexpected end of file within string literal");
     }
     buf_push(str, 0);
     tok.type = TOKEN_STR;
@@ -442,7 +465,7 @@ void next_token()
         CASE3('=',  TOKEN_ASSIGN,   '=',    TOKEN_EQ,         '>', TOKEN_ARROW);
 
     default:
-        //TODO: ERROR
+        error("No token of found");
         lex.current++;
         next_token();
     }

@@ -6,6 +6,9 @@
 
 #define typeof __typeof__
 
+typedef int8_t i8;
+typedef double f64;
+
 const char* read_file(const char* filename)
 {
     char* buffer = 0;
