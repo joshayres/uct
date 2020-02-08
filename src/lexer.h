@@ -183,8 +183,8 @@ typedef struct
     token_type type;
     token_mod mod;
     const char* start;
-    int length;
-    int line;
+    i32 length;
+    i32 line;
     union
     {
         unsigned long long int_val;

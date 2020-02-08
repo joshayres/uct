@@ -4,7 +4,7 @@ typedef struct
 {
     const char* start;
     const char* current;
-    int line;
+    i32 line;
 } lexer;
 
 lexer lex;
@@ -18,7 +18,7 @@ static bool is_alpha(char c)
             c == '_';
 }
 
-uint8_t char_to_digit[256] =
+u8 char_to_digit[256] =
 {
     ['0'] = 0,
     ['1'] = 1,
@@ -73,7 +73,7 @@ void error(const char* fmt, ...)
 void scan_int()
 {
     tok.start = lex.current;
-    int base = 10;
+    i32 base = 10;
     const char *start_digits = lex.current;
     if(*lex.current == '0')
     {
@@ -108,7 +108,7 @@ void scan_int()
             lex.current++;
             continue;
         }
-        int digit = char_to_digit[(unsigned char)*lex.current];
+        i32 digit = char_to_digit[(unsigned char)*lex.current];
         if(digit == 0 && *lex.current != '0')
         {
             break;
@@ -183,7 +183,7 @@ void scan_char()
 {
     assert(*lex.current == '\'');
     lex.current++;
-    int val = 0;
+    i32 val = 0;
     if(*lex.current == '\'')
     {
         error("Char literal cannot be empty");
