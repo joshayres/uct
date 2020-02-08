@@ -6,6 +6,17 @@
 
 #define typeof __typeof__
 
+typedef int8_t i8;
+typedef int16_t i16;
+typedef int32_t i32;
+typedef int64_t i64;
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+typedef float f32;
+typedef double f64;
+
 const char* read_file(const char* filename)
 {
     char* buffer = 0;
@@ -103,3 +114,34 @@ char* buf__printf(char* buf, const char* fmt, ...)
 
 #define each(item, buf) \
     (typeof(*(buf)) *p = (buf), item = *p; p < &((buf)[buf_len(buf)]); p++, (item) = *p)
+
+
+typedef struct
+{
+    size_t len;
+    const char* str;
+} intern;
+
+static intern* interns;
+
+const char* str_intern_range(const char* start, const char* end)
+{
+    size_t len = end - start;
+    for(intern *it = interns; it != buf_end(interns); it++)
+    {
+        if(it->len == len && strncmp(it->str, start, len) == 0)
+        {
+            return it->str;
+        }
+    }
+    char *str = malloc(len + 1);
+    memcpy(str, start, len);
+    str[len] = 0;
+    buf_push(interns, (intern){len, str});
+    return str;
+}
+
+const char* str_intern(const char* str)
+{
+    return str_intern_range(str, str + strlen(str));
+}
