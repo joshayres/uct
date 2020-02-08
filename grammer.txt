@@ -1,6 +1,6 @@
 (* Declarations *)
 
-type_list = type (',' tpye)*
+type_list = type (',' type)*
 name_list = NAME (',' NAME)*
 
 base_type   = NAME
@@ -19,8 +19,8 @@ var_decl = NAME ':' type ('=' expr)?
 
 const_decl = NAME '=' expr
 
-func param = NAME ':' type
-func_param_list = fuinc_param (',' func_param)*
+func_param = NAME ':' type
+func_param_list = func_param (',' func_param)*
 func_decl = NAME '(' func_param_list? ')' (':' type)? '{' stmt_block '}'
 
 decl    = 'enum' enum_decl
@@ -42,7 +42,7 @@ switch_block = '{' switch_case* '}'
 stmt    = 'return' expr ';'
         | '{' stmt* '}'
         | 'if' '(' expr ')' stmt_block ('else' 'if' '(' expr ')' stmt_block)* ('else' stmt_block)?
-        | 'for' ('(' (stmt_list ';' expr ';' stmt_list) | NAME 'in' NAME ')') stmt_block
+        | 'for' ('(' (stmt_list ';' expr ';' stmt_list) | ( NAME 'in' NAME ) ')') stmt_block
         | 'while' '(' expr ')' stmt_block
         | 'switch' '(' expr ')' switch_block
         | 'break' ';'
@@ -74,4 +74,3 @@ and_expr = cmp_expr (AND cpm_expr)*
 or_expr = and_expr (OR and_expr)*
 ternary_expr = or_expr ('?' ternary_expr ':' ternary_expr)?
 expr    = ternary_expr
-        |
