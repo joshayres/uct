@@ -1,0 +1,77 @@
+(* Declarations *)
+
+type_list = type (',' tpye)*
+name_list = NAME (',' NAME)*
+
+base_type   = NAME
+            | 'fn' '(' type_list? ')' ':' type
+            | '(' type ')'
+type = base_type ('[' ( type ';' INT)? ']' | '*')*
+
+enum_item = NAME ('=' expr)?
+enum_items = enum_item (';' enum_item)* ';'
+enum_decl = NAME '{' enum_items? '}'
+
+aggregate_field = name_list ':' type
+aggregate_decl = NAME '{' (aggregate_field ';')* '}' (* Support initial values *)
+
+var_decl = NAME ':' type ('=' expr)?
+
+const_decl = NAME '=' expr
+
+func param = NAME ':' type
+func_param_list = fuinc_param (',' func_param)*
+func_decl = NAME '(' func_param_list? ')' (':' type)? '{' stmt_block '}'
+
+decl    = 'enum' enum_decl
+        | 'err' enum_decl
+        | 'struct' aggregate_decl
+        | 'union' aggregate_decl
+        | 'let' var_decl
+        | 'const' const_decl
+        | 'fn' func_decl
+
+(* Statements *)
+
+assign_op = '=' | COLLON_ASSIGN | ADD_ASSIGN | ...
+
+switch_case     = expr ':' stmt*
+                | expr '=>' stmt_block
+switch_block = '{' switch_case* '}'
+
+stmt    = 'return' expr ';'
+        | '{' stmt* '}'
+        | 'if' '(' expr ')' stmt_block ('else' 'if' '(' expr ')' stmt_block)* ('else' stmt_block)?
+        | 'for' ('(' (stmt_list ';' expr ';' stmt_list) | NAME 'in' NAME ')') stmt_block
+        | 'while' '(' expr ')' stmt_block
+        | 'switch' '(' expr ')' switch_block
+        | 'break' ';'
+        | 'continue' ';'
+        | expr (INC | DEC | assign_op expr)?
+
+(* Type Specifier *)
+(* (:type) stolen from odin/ion for easier parsing *)
+typespec = NAME | '(' ':' type ')'
+
+opperand_expr   = INT
+                | FLOAT
+                | STR
+                | NAME
+                | typespec '{' expr_list '}'
+                | 'cast' '(' type ')' expr
+                | '(' expr ')'
+
+base_expr = operand_expr ('(' expr_list ')' | '[' expr ']' | '.' NAME)*
+unary_expr  = [+-&] unary_expr [^]
+            | base_expr
+mul_op = '*' | '/' | '%'
+mul_expr = unary_expr (mul_op unary_expr)*
+add_op = '+' | '-' | '|'
+add_expr = mul_expr (add_op mul_expr)*
+cmp_op = EQ | NOTEQ | '<' | LTEQ | '>' | '>='
+cmpr_expr = mul_expr (cmp_op mul_expr)*
+and_expr = cmp_expr (AND cpm_expr)*
+or_expr = and_expr (OR and_expr)*
+ternary_expr = or_expr ('?' ternary_expr ':' ternary_expr)?
+expr    = ternary_expr
+        |
