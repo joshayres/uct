@@ -23,8 +23,8 @@ fn main()
 {
   let foo: i32 = 10;
   return;
- }
- ```
+}
+```
 
 ## Goals
 + Learn about compliers
