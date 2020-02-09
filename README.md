@@ -22,6 +22,7 @@ import fmt
 fn main()
 {
   let foo: i32 = 10;
+  let bar ;= &foo;
   return;
 }
 ```
