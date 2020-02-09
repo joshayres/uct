@@ -161,6 +161,7 @@ const char* break_keyword;
 const char* err_keyword;
 const char* import_keyword;
 const char* extern_keyword;
+const char* in_keyword;
 const char* return_keyword;
 
 const char* first_keyword;

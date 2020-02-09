@@ -274,6 +274,7 @@ void init_keywords()
     KEYWORD(err);
     KEYWORD(import);
     KEYWORD(extern);
+    KEYWORD(in);
     KEYWORD(return);
 
     first_keyword = struct_keyword;
