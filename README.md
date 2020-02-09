@@ -16,7 +16,7 @@ To build on windows:
 Not yet done
 
 ## Sample Code
-'''cpp
+```cpp
 import fmt 
 
 fn main()
@@ -24,7 +24,7 @@ fn main()
   let foo: i32 = 10;
   return;
  }
- '''
+ ```
 
 ## Goals
 + Learn about compliers
