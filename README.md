@@ -15,6 +15,17 @@ cd src
 To build on windows:
 Not yet done
 
+## Sample Code
+'''cpp
+import fmt 
+
+fn main()
+{
+  let foo: i32 = 10;
+  return;
+ }
+ '''
+
 ## Goals
 + Learn about compliers
 + Create a slightly better C (kinda)
