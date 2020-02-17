@@ -12,6 +12,7 @@
 
 #include "common.c"
 #include "lexer.c"
+#include "ast.c"
 
 #define assert_token_int(x) assert(tok.int_val == (x) && match_token(TOKEN_INT))
 #define assert_token_float(x) assert(tok.float_val == (x) && match_token(TOKEN_FLOAT))
