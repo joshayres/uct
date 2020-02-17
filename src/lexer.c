@@ -197,7 +197,7 @@ void scan_char()
     {
         lex.current++;
         val = escape_to_char[(unsigned char)*lex.current];
-        if(val == 0 && lex.current != '0')
+        if(val == 0 && *lex.current != '0')
         {
             error("Invalid char literal escape '\\%c'", *lex.current);
         }
