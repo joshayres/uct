@@ -3,11 +3,12 @@ typedef struct decl decl;
 typedef struct expr expr;
 typedef struct stmt stmt;
 
+//Statement block, fuck this name
 typedef struct
 {
     stmt **stmt;
     size_t num_stmts;
-}stmt_block;
+}s_block;
 
 typedef enum
 {
@@ -23,7 +24,8 @@ typedef struct
 {
     size_t num_args; 
     typespec** args;
-    typespec** ret;
+    typespec** rets;
+    size_t num_rets;
 }func_typespec;
 
 typedef struct
@@ -43,7 +45,7 @@ struct typespec
 
     union 
     {
-        char* name;
+        const char* name;
         func_typespec func;
         ptr_typespec ptr;
         array_typespec array;
@@ -107,9 +109,9 @@ typedef struct
 {
     func_item* param_list;
     size_t num_params;
-    typespec* return_type;
+    typespec** return_type;
     size_t num_return;
-    stmt_block block;
+    s_block block;
 }func_decl;
 
 struct decl
@@ -218,6 +220,7 @@ struct expr
 typedef enum
 {
     STMT_NONE,
+    STMT_DECL,
     STMT_RETURN,
     STMT_BLOCK,
     STMT_IF,
@@ -239,16 +242,16 @@ typedef struct
 typedef struct
 {
     expr* cond;
-    stmt_block block;
+    s_block block;
 }else_if;
 
 typedef struct
 {
     expr* cond;
-    stmt_block then_block;
+    s_block then_block;
     else_if* elseifs;
     size_t num_elseifs;
-    stmt_block else_block;
+    s_block else_block;
 }if_stmt;
 
 //TODO: For each loops
@@ -257,13 +260,13 @@ typedef struct
     stmt* init;
     expr* cond;
     stmt* next;
-    stmt_block block;
+    s_block block;
 }for_stmt;
 
 typedef struct
 {
     expr* cond;
-    stmt_block block;
+    s_block block;
 }while_stmt;
 
 //TODO: lambdas for switch statements and in general
@@ -272,13 +275,13 @@ typedef struct
     expr **exprs;
     size_t num_exprs;
     bool is_default;
-    stmt_block block;
+    s_block block;
 }switch_case;
 
 typedef struct
 {
     expr* expr;
-    switch_case cases;
+    switch_case* cases;
     size_t num_cases;
 }switch_stmt;
 
@@ -305,9 +308,10 @@ struct stmt
         for_stmt for_stmt;
         while_stmt while_stmt;
         switch_stmt switch_stmt;
-        stmt_block block;
+        s_block block;
         init_stmt init;
         assign_stmt assign;
         expr* expr;
+        decl* decl;
     };
 };
