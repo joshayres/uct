@@ -271,6 +271,7 @@ void init_keywords()
     KEYWORD(while);
     KEYWORD(switch);
     KEYWORD(break);
+	KEYWORD(continue);
     KEYWORD(err);
     KEYWORD(import);
     KEYWORD(extern);
@@ -377,7 +378,6 @@ void next_token()
     case 'A': case 'B': case 'C': case 'D': case 'E': case 'F': case 'G': case 'H': case 'I': case 'J':
     case 'K': case 'L': case 'M': case 'N': case 'O': case 'P': case 'Q': case 'R': case 'S': case 'T':
     case 'U': case 'V': case 'W': case 'X': case 'Y': case 'Z':
-    case '_':
         while(isalnum(*lex.current) || *lex.current == '_')
         {
             lex.current++;
@@ -455,6 +455,7 @@ void next_token()
         CASE1(';',  TOKEN_SEMICOLON);
         CASE1('^',  TOKEN_HAT);
         CASE1('~',  TOKEN_NEG);
+		CASE1('_', 	TOKEN_UNDERSCORE);
         CASE2('!',  TOKEN_NOT,      '=',    TOKEN_NOTEQ);
         CASE2(':',  TOKEN_COLON,    '=',    TOKEN_COLON_ASSIGN);
         CASE2('*',  TOKEN_MUL,      '=',    TOKEN_MUL_ASSIGN);
@@ -484,9 +485,33 @@ void init_lex(const char* source)
     next_token();
 }
 
+const char* token_info()
+{
+    if(tok.type == TOKEN_NAME || tok.type == TOKEN_KEYWORD)
+	{
+		return tok.name;
+	}
+	return token_type_name(tok.type);
+}
+
 bool is_token(token_type type)
 {
     return tok.type == type;
+}
+
+bool is_token_eof()
+{
+    return tok.type == TOKEN_EOF;
+}
+
+bool is_keyword(const char* name)
+{
+    return is_token(TOKEN_KEYWORD) && tok.name == name;
+}
+
+bool is_name(const char* name)
+{
+    return is_token(TOKEN_NAME) && tok.name == name;
 }
 
 bool match_token(token_type type)
@@ -500,4 +525,27 @@ bool match_token(token_type type)
     {
         return false;
     }
+}
+
+bool match_keyword(const char* name)
+{
+    if(is_keyword(name))
+	{
+		next_token();
+		return true;
+	}
+	return false;
+}
+
+bool expect_token(token_type type)
+{
+    if(is_token(type))
+	{
+		next_token();
+		return true;
+	}
+	else
+	{
+		error("expected token %s, got %s", token_type_name(type), token_info());
+	}
 }

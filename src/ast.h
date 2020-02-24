@@ -66,7 +66,7 @@ typedef enum
 
 typedef struct 
 {
-    char* name;
+    const char* name;
     expr* init;
 }enum_item;
 
@@ -78,8 +78,9 @@ typedef struct
 
 typedef struct
 {
-    char* name;
-    typespec type;
+    const char* name;
+    typespec* type;
+	expr* init;
 }aggregate_item;
 
 typedef struct

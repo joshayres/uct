@@ -67,6 +67,7 @@ typedef enum
     TOKEN_COLON_ASSIGN,
 
     TOKEN_ARROW,
+	TOKEN_UNDERSCORE,
 
     NUM_TOKEN_KINDS,
 } token_type;
@@ -158,6 +159,7 @@ const char* for_keyword;
 const char* while_keyword;
 const char* switch_keyword;
 const char* break_keyword;
+const char* continue_keyword;
 const char* err_keyword;
 const char* import_keyword;
 const char* extern_keyword;

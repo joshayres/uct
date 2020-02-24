@@ -67,10 +67,9 @@ decl* decl_new(decl_type type, const char* name)
     return d;
 }
 
-decl* decl_enum(decl_type type, const char* name, enum_item* items, size_t num_items)
+decl* decl_enum(const char* name, enum_item* items, size_t num_items)
 {
-    assert(type == DECL_ENUM || type == DECL_ERR);
-    decl* d = decl_new(type, name);
+    decl* d = decl_new(DECL_ENUM, name);
     d->enum_decl.items = items;
     d->enum_decl.num_items = num_items;
     return d;

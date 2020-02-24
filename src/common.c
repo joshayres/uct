@@ -179,3 +179,24 @@ void *arena_alloc(arena* arena, size_t size)
     arena->ptr = ALIGN_UP_PTR(arena->ptr + size, ARENA_ALIGNMENT);
     return ptr;
 }
+
+void syntax_error(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    printf("Syntax Error: ");
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
+}
+
+void fatal_syntax_error(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    printf("Syntax Error: ");
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
+    exit(1);
+}
