@@ -3,6 +3,10 @@
 #define CLAMP_MAX(x, max) MIN(x, max)
 #define CLAMP_MIN(x, min) MAX(x, min)
 #define IS_POW2(x) (((x) != 0) && ((x) & ((x)-1)) == 0)
+#define ALIGN_DOWN(n, a) ((n) & ~((a) -1))
+#define ALIGN_UP(n, a) ALIGN_DOWN((n) + (a) - 1, (a))
+#define ALIGN_DOWN_PTR(p, a) ((void *)ALIGN_DOWN((uintptr_t)(p), (a)))
+#define ALIGN_UP_PTR(p, a) ((void *)ALIGN_UP((uintptr_t)(p), (a)))
 
 #define typeof __typeof__
 
@@ -144,4 +148,55 @@ const char* str_intern_range(const char* start, const char* end)
 const char* str_intern(const char* str)
 {
     return str_intern_range(str, str + strlen(str));
+}
+
+typedef struct
+{
+    char *ptr;
+    char *end;
+    char **blocks;
+}arena;
+
+#define ARENA_ALIGNMENT 8
+#define ARENA_BLOCK_SIZE 1024
+
+void arena_grow(arena* arena, size_t min_size)
+{
+    size_t size = ALIGN_UP(MAX(ARENA_BLOCK_SIZE, min_size), ARENA_ALIGNMENT);
+    arena->ptr = malloc(size);
+    assert(arena->ptr == ALIGN_DOWN_PTR(arena->ptr, ARENA_ALIGNMENT));
+    arena->end = arena->ptr + size;
+    buf_push(arena->blocks, arena->ptr);
+}
+
+void *arena_alloc(arena* arena, size_t size)
+{
+    if(size > (size_t)(arena->end - arena->ptr))
+    {
+        arena_grow(arena, size);
+    }
+    void* ptr = arena->ptr;
+    arena->ptr = ALIGN_UP_PTR(arena->ptr + size, ARENA_ALIGNMENT);
+    return ptr;
+}
+
+void syntax_error(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    printf("Syntax Error: ");
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
+}
+
+void fatal_syntax_error(const char* fmt, ...)
+{
+    va_list args;
+    va_start(args, fmt);
+    printf("Syntax Error: ");
+    vprintf(fmt, args);
+    printf("\n");
+    va_end(args);
+    exit(1);
 }
