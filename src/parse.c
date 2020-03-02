@@ -143,7 +143,7 @@ expr* parse_expr_operand()
 	}
 	else
 	{
-		syntax_error("Unexpected token %s in expression", token_info());
+		fatal_syntax_error("Unexpected token %s in expression", token_info());
 		return NULL;
 	}
 }
@@ -198,7 +198,10 @@ expr* parse_expr_unary()
 		next_token();
 		return expr_unary(op, parse_expr_unary());
 	}
-	return parse_expr_base();
+	else
+	{
+		return parse_expr_base();
+	}
 }
 
 bool is_mul_op()
@@ -209,7 +212,7 @@ bool is_mul_op()
 expr* parse_expr_mul()
 {
 	expr* expr = parse_expr_unary();
-	while(is_mul_op)
+	while(is_mul_op())
 	{
 		token_type op = tok.type;
 		next_token();
@@ -444,6 +447,20 @@ stmt* parse_stmt_switch()
 	return stmt_switch(expr, ast_dup(cases, buf_sizeof(cases)), buf_len(cases));
 }
 
+stmt* parse_stmt_return()
+{
+	expr** exprs = NULL;
+	if(!match_token(TOKEN_SEMICOLON))
+	{
+		buf_push(exprs, parse_expr());
+		while(match_token(TOKEN_COMMA))
+		{
+			buf_push(exprs, parse_expr());
+		}
+	}
+	return stmt_return(ast_dup(exprs, buf_sizeof(exprs)), buf_len(exprs));
+}
+
 stmt* parse_stmt()
 {
 	if(match_keyword(if_keyword))
@@ -474,13 +491,7 @@ stmt* parse_stmt()
 	}
 	else if(match_keyword(return_keyword))
 	{
-		expr* expr = NULL;
-		if(!is_token(TOKEN_SEMICOLON))
-		{
-			expr = parse_expr();
-		}
-		expect_token(TOKEN_SEMICOLON);
-		return stmt_return(expr);
+		return parse_stmt_return();
 	}
 	else
 	{

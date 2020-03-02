@@ -15,9 +15,27 @@ cd src
 To build on windows:
 Not yet done
 
+## Sample Code
+```cpp
+import fmt 
+
+fn add_two_numbers(a: i32, b: i32): i32
+{
+	return a + b;
+}
+
+fn main()
+{
+	let foo: i32 = 10;
+	let bar := &foo;
+}
+```
+
 ## Goals
 + Learn about compliers
-+ Create a slightly better C (kinda)
++ Reduce Friction
++ Increase Speed
++ Lower Complexity
 
 ## Features
 + 2 pass compiler
@@ -27,4 +45,4 @@ Not yet done
 + Lambdas
 + Stricter Type checking
 + Bound checking
-+ Metaprogramming features
++ Metaprogramming features Metaprogramming features

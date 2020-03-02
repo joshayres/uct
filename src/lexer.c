@@ -10,7 +10,6 @@ typedef struct
 lexer lex;
 token tok;
 
-
 static bool is_alpha(char c)
 {
     return  (c >= 'a' && c <= 'z') ||
