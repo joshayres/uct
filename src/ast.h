@@ -237,7 +237,8 @@ typedef enum
 
 typedef struct
 {
-    expr* expr;
+    expr** expr;
+	size_t num_exprs;
 }return_stmt;
 
 typedef struct

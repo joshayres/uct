@@ -224,7 +224,7 @@ stmt* stmt_decl(decl* decl)
     return s;
 }
 
-stmt* stmt_return(expr* expr)
+stmt* stmt_return(expr** expr, size_t num_expr)
 {
     stmt* s = stmt_new(STMT_RETURN);
     s->return_stmt.expr = expr;
