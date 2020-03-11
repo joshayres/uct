@@ -19,18 +19,10 @@
 int main(int argc, char **argv)
 {
     init_keywords();
-
-	init_lex("let a:i32 = 1+1;");
+	init_lex(read_file("test.uct"));
 	decl* d = parse_decl();
 	print_decl(d);
 	printf("\n");
-	init_lex("struct a {a: i32; b: f32 = 0.0;}");
-	d = parse_decl();
-	print_decl(d);
-	printf("\n");
-	init_lex("fn foo():i32, f32 {let a: i32 = 1 + 1;\n b := a + 3;}");
-	d = parse_decl();
-	print_decl(d);
-	printf("\n");
+
 	return 0;
 }

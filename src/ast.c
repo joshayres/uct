@@ -228,6 +228,7 @@ stmt* stmt_return(expr** expr, size_t num_expr)
 {
     stmt* s = stmt_new(STMT_RETURN);
     s->return_stmt.expr = expr;
+    s->return_stmt.num_exprs = num_expr;
     return s;
 }
 

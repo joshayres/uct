@@ -458,6 +458,7 @@ stmt* parse_stmt_return()
 			buf_push(exprs, parse_expr());
 		}
 	}
+	expect_token(TOKEN_SEMICOLON);
 	return stmt_return(ast_dup(exprs, buf_sizeof(exprs)), buf_len(exprs));
 }
 
@@ -622,7 +623,7 @@ decl* parse_decl_func()
 	if(!is_token(TOKEN_RPAREN))
 	{
 		buf_push(params, parse_decl_func_param());
-		while(match_token(TOKEN_RPAREN))
+		while(match_token(TOKEN_COMMA))
 		{
 			buf_push(params, parse_decl_func_param());
 		}
