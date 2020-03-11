@@ -138,11 +138,11 @@ void print_stmt_block(s_block block)
 {
 	printf("(block");
 	indent++;
-	for each(stm, block.stmt)
+	for (stmt **it = block.stmt; it != block.stmt + block.num_stmts; it++)
 	{
-		printf("\n");
-		print_stmt(stm);
-	}
+        printf("\n");
+        print_stmt(*it);
+    }
 	indent--;
 	printf(")");
 }
@@ -159,10 +159,10 @@ void print_stmt(stmt *stm)
 		printf("(return");
 		if(s->return_stmt.expr)
 		{
-			for each(ret, s->return_stmt.expr)
+			for(expr **ret = s->return_stmt.expr; ret != s->return_stmt.expr + s->return_stmt.num_exprs; ret++)
 			{
 				printf(" ");
-				print_expr(ret);
+				print_expr(*ret);
 			}
 		}
 		printf(")");
@@ -265,15 +265,15 @@ void print_stmt(stmt *stm)
 void print_aggregate_decl(decl* dec)
 {
 	decl* d = dec;
-	for each(it, d->aggregate_decl.items)
+	for (aggregate_item *it = d->aggregate_decl.items; it != d->aggregate_decl.items + d->aggregate_decl.num_items; it++)
 	{
 		printf("\n");
 		printf("(");
-		print_typespec(it.type);
-		printf(" %s", it.name);
-		if(it.init)
+		print_typespec(it->type);
+		printf(" %s", it->name);
+		if(it->init)
 		{
-			print_expr(it.init);
+			print_expr(it->init);
 		}
 		else
 		{
@@ -291,13 +291,13 @@ void print_decl(decl* dec)
 	case DECL_ENUM:
 		printf("(enum %s", d->name);
 		indent++;
-		for each(item, d->enum_decl.items)
+		for(enum_item *item = d->enum_decl.items; item != d->enum_decl.items + d->enum_decl.num_items; item++)
 		{
 			printf("\n");
-			printf("(%s ", item.name);
-			if(item.init)
+			printf("(%s ", item->name);
+			if(item->init)
 			{
-				print_expr(item.init);
+				print_expr(item->init);
 			}
 			else
 			{
@@ -344,17 +344,17 @@ void print_decl(decl* dec)
 	case DECL_FUNC:
 		printf("(fn %s ", d->name);
 		printf("(");
-		for each(param, d->func_decl.param_list)
+		for(func_item* param = d->func_decl.param_list; param != d->func_decl.param_list + d->func_decl.num_params; param++)
 		{
-			printf(" %s ", param.name);
-			print_typespec(param.type);
+			printf(" %s ", param->name);
+			print_typespec(param->type);
 		}
 		printf(" ) ");
 		if(d->func_decl.return_type)
 		{
-			for each(ret, d->func_decl.return_type)
+			for(typespec** ret = d->func_decl.return_type; ret != d->func_decl.return_type + d->func_decl.num_return; ret++)
 			{
-				print_typespec(ret);
+				print_typespec(*ret);
 				printf(" ");
 			}
 		}

@@ -495,13 +495,14 @@ stmt* parse_stmt()
 	}
 	else
 	{
+		printf("hi");
 		decl* decl = parse_decl_opt();
 		if(decl)
 		{
 			return stmt_decl(decl);
 		}
 		stmt* stmt = parse_simple_stmt();
-		expect_token(TOKEN_SEMICOLON);
+		match_token(TOKEN_SEMICOLON);
 		return stmt;
 	}
 }
