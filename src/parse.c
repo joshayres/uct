@@ -495,14 +495,17 @@ stmt* parse_stmt()
 	}
 	else
 	{
-		printf("hi");
 		decl* decl = parse_decl_opt();
+		stmt* stmt;
 		if(decl)
 		{
-			return stmt_decl(decl);
+			stmt = stmt_decl(decl);
 		}
-		stmt* stmt = parse_simple_stmt();
-		match_token(TOKEN_SEMICOLON);
+		else
+		{
+			stmt = parse_simple_stmt();
+		}
+		expect_token(TOKEN_SEMICOLON);
 		return stmt;
 	}
 }
@@ -545,7 +548,7 @@ decl* parse_decl_enum()
 
 aggregate_item parse_decl_aggregate_item()
 {
-	const char* name = NULL;
+	const char* name = parse_name();
 	expect_token(TOKEN_COLON);
 	typespec* type = parse_type();
 	expr* init = NULL;

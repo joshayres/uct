@@ -24,11 +24,11 @@ int main(int argc, char **argv)
 	decl* d = parse_decl();
 	print_decl(d);
 	printf("\n");
-	init_lex("struct a {}");
+	init_lex("struct a {a: i32; b: f32 = 0.0;}");
 	d = parse_decl();
 	print_decl(d);
 	printf("\n");
-	init_lex("fn foo():i32, f32 {let a: i32 = 1 + 1; b := a + 3;}");
+	init_lex("fn foo():i32, f32 {let a: i32 = 1 + 1;\n b := a + 3;}");
 	d = parse_decl();
 	print_decl(d);
 	printf("\n");

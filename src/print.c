@@ -270,7 +270,7 @@ void print_aggregate_decl(decl* dec)
 		printf("\n");
 		printf("(");
 		print_typespec(it->type);
-		printf(" %s", it->name);
+		printf(" %s ", it->name);
 		if(it->init)
 		{
 			print_expr(it->init);
