@@ -1,0 +1,12 @@
+struct a
+{
+    foo: i32;
+    bar: f32;
+}
+
+fn foo(a: i32, bar: foo): i32, f32
+{
+    let g: i32 = 10;
+    c := a + g;
+    return c, 1.0;
+}
